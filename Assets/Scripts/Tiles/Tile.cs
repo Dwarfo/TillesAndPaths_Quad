@@ -51,6 +51,7 @@ public class Tile : MonoBehaviour
         Vector2 center = new Vector2(centerXPos, centerYPos);
 
         gameObject.transform.position = new Vector3(center.x, center.y, 0);
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder = -100 * (int)v.y - (int)v.x;
     }
 
     public void AddNeighbour(Tile neighbour)

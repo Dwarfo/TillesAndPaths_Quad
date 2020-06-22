@@ -16,8 +16,10 @@ MonoBehaviour:
   ySize: 5
   pixelOffset: 0.5
   tileSize: 1
-  tilePrefab: {fileID: 1569730307009566281, guid: a457d1bec6e19af47a3192679cdc6394,
-    type: 3}
   allTileTypes:
   - {fileID: 11400000, guid: af9c8007158396a4caeb06022a43a66a, type: 2}
   - {fileID: 11400000, guid: 13dab6b9fa610df4580dd31797b91cc7, type: 2}
+  tileWidth: 1.075
+  tileHeight: 0.62
+  tilePrefab: {fileID: 1569730307009566281, guid: a457d1bec6e19af47a3192679cdc6394,
+    type: 3}

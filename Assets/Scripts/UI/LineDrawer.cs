@@ -21,6 +21,7 @@ public class LineDrawer : MonoBehaviour
         lr.SetPositions(new Vector3[1]);
 
         rectangleDrawer = AddRenderer(Instantiate(emptyGo, transform), "Rectangle drawer");
+        rectangleDrawer.sortingLayerName = "GUI";
         rectangleDrawer.sortingOrder = 1;
     }
 
