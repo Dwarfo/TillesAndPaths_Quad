@@ -41,18 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 2481749631
-    locked: 0
-  - name: Enemies
-    uniqueID: 1658513455
-    locked: 0
-  - name: Items
-    uniqueID: 2735007629
+  - name: Terrain
+    uniqueID: 1353416475
     locked: 0
   - name: GUI
     uniqueID: 3893084335
     locked: 0
-  - name: Terrain
-    uniqueID: 1353416475
+  - name: Items
+    uniqueID: 2735007629
+    locked: 0
+  - name: Enemies
+    uniqueID: 1658513455
+    locked: 0
+  - name: Player
+    uniqueID: 2481749631
     locked: 0

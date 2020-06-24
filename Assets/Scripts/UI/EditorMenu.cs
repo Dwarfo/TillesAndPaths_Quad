@@ -44,13 +44,12 @@ public class EditorMenu : MonoBehaviour, IMenu
 
     public void SaveOnClick()
     {
-        MapData md = EditorManager.Instance.terrainEditor.GetEditedMapData();
-        GameManager.Instance.SaveMap(md);
+        EditorManager.Instance.SaveMap();
     }
 
     public void LoadOnClick()
     {
-        GameManager.Instance.LoadMap();
+        EditorManager.Instance.LoadMap();
     }
 
     public void Continue()

@@ -74,10 +74,18 @@ public class TerrainEditor : MonoBehaviour
         indexToTileDict[position] = newTile;
     }
 
-    public MapData SerializeArray(Dictionary<Vector2, Tile> tilesMap) 
+    public void SetSettings(SO_GameSettings gameSettings) 
+    {
+        this.tileWidth = gameSettings.tileWidth;
+        this.tileHeight = gameSettings.tileHeight;
+        intToTileTypes = new Dictionary<int, SO_Tile>();
+
+        TileField.AddTilesToDict(intToTileTypes, gameSettings.allTileTypes);
+    }
+    public MapData GetEditedMapData() 
     {
         List<TileEntry> entryList = new List<TileEntry>();
-        foreach (KeyValuePair<Vector2, Tile> tile in tilesMap) 
+        foreach (KeyValuePair<Vector2, Tile> tile in indexToTileDict)
         {
             //tile.Value.SetIndex(tile.Value.Index.x - minX, tile.Value.Index.y - minY);
             TileEntry entry = new TileEntry();
@@ -91,19 +99,6 @@ public class TerrainEditor : MonoBehaviour
         md.tiles = entryList;
 
         return md;
-    }
-
-    public void SetSettings(SO_GameSettings gameSettings) 
-    {
-        this.tileWidth = gameSettings.tileWidth;
-        this.tileHeight = gameSettings.tileHeight;
-        intToTileTypes = new Dictionary<int, SO_Tile>();
-
-        TileField.AddTilesToDict(intToTileTypes, gameSettings.allTileTypes);
-    }
-    public MapData GetEditedMapData() 
-    {
-        return SerializeArray(indexToTileDict);
     }
 
     private Tile MakeTile(GameObject tilePrefab, SO_Tile tileData, Vector2 position)
