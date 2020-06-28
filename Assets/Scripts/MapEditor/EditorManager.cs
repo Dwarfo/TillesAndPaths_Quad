@@ -8,6 +8,7 @@ public class EditorManager : Singleton_MB<EditorManager>
 {
     public TerrainEditor terrainEditor;
     public TileChooser tileChooser;
+    public GameSaveChooser saveChooser;
     public SO_GameSettings gameSettings;
 
     void Start()
@@ -16,11 +17,32 @@ public class EditorManager : Singleton_MB<EditorManager>
             terrainEditor = gameObject.AddComponent<TerrainEditor>();
 
         terrainEditor.SetSettings(gameSettings);
+        //Add event handler for tile newTIletype chosen, add all tiles to be available for choosing
+        tileChooser.tileChosenEvent.AddListener(HandleTileChosen);
         foreach (SO_Tile tileInfo in gameSettings.allTileTypes)
         {
             TileToChoose ttcScript = tileChooser.AddTileToChoose(tileInfo);
-            ttcScript.tileChosenEvent.AddListener(HandleTileChosen);
         }
+        //recalculate tilechooser content size
+
+        FillGameSaves();
+    }
+
+    private void FillGameSaves() 
+    {
+        List<MapData> mdList = new List<MapData>();
+        BinaryFormatter bf = new BinaryFormatter();
+        string path = Application.persistentDataPath;
+
+        foreach (string file in Directory.EnumerateFiles(path, "*.mp"))
+        {
+            FileStream fs = new FileStream(file, FileMode.Open);
+            MapData data = bf.Deserialize(fs) as MapData;
+            saveChooser.AssignSaveData(data);
+            mdList.Add(data);
+            fs.Close();
+        }
+        saveChooser.AdjustContent();
     }
 
     public void HandleTileChosen(SO_Tile tileInfo) 

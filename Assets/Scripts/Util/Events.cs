@@ -8,3 +8,4 @@ public class GameObjectEvent : UnityEvent<GameObject> { };
 public class PathEvent : UnityEvent<Path>{ };
 public class EmptyEvent : UnityEvent { };
 public class TileInfoEvent : UnityEvent<SO_Tile> { };
+public class SaveGameEvent : UnityEvent<MapData> { };

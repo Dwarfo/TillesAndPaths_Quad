@@ -88,6 +88,11 @@
     <Compile Include="Assets\Scripts\UI\EditorMenu.cs" />
     <Compile Include="Assets\Scripts\UI\IMenu.cs" />
     <Compile Include="Assets\Scripts\UI\LineDrawer.cs" />
+    <Compile Include="Assets\Scripts\UI\SaveGameEntry.cs" />
+    <Compile Include="Assets\Scripts\UI\SaveLoadMenu\GameSaveChooser.cs" />
+    <Compile Include="Assets\Scripts\UI\SaveLoadMenu\ISaveAssigner.cs" />
+    <Compile Include="Assets\Scripts\UI\SaveLoadMenu\LoadMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\SaveLoadMenu\SaveMenu.cs" />
     <Compile Include="Assets\Scripts\UI\TileChooser.cs" />
     <Compile Include="Assets\Scripts\UI\TileToChoose.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />

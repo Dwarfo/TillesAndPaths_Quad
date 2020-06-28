@@ -8,10 +8,9 @@ public class TileToChoose : MonoBehaviour
     public Button tileButton;
     public Text tileDescr;
 
-    public TileInfoEvent tileChosenEvent = new TileInfoEvent();
-
+    private TileChooser tileChooser;
     private SO_Tile tileInfo;
-
+    
     void Start()
     {
         if (tileButton == null)
@@ -24,7 +23,7 @@ public class TileToChoose : MonoBehaviour
 
     public void ChooseTile() 
     {
-        tileChosenEvent.Invoke(tileInfo);
+        tileChooser.InvokeTileChosen(tileInfo);
     }
 
     public void SetTileInfo(SO_Tile tile)
@@ -32,5 +31,10 @@ public class TileToChoose : MonoBehaviour
         tileInfo = tile;
         tileDescr.text = "Name: " + tile.tileName + "\n" + "Difficulty: " + tile.terrainDifficulty;
         tileButton.image.sprite = tile.tileImage;
+    }
+
+    public void SetTileChooser(TileChooser tc)
+    {
+        this.tileChooser = tc;
     }
 }

@@ -8,26 +8,21 @@ public class TileChooser : MonoBehaviour
     public GameObject content;
     public GameObject tileToChoosePrefab;
 
+    public TileInfoEvent tileChosenEvent = new TileInfoEvent();
+
     private int numberOfItems = 0;
-    void Start()
+    public void InvokeTileChosen(SO_Tile tileInfo)
     {
-        
+        tileChosenEvent.Invoke(tileInfo);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public TileToChoose AddTileToChoose(SO_Tile tileInfo) 
     {
         GameObject tileToChoose = Instantiate(tileToChoosePrefab, content.transform);
         RectTransform rt = tileToChoose.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector3(-180, 90 - 120 * numberOfItems);
+        rt.anchoredPosition = new Vector3(-160, 90 - 120 * numberOfItems);
         TileToChoose tileToChooseScript = tileToChoose.GetComponent<TileToChoose>();
         tileToChooseScript.SetTileInfo(tileInfo);
-
+        tileToChooseScript.SetTileChooser(this);
         numberOfItems++;
 
         return tileToChooseScript;
