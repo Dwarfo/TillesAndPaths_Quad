@@ -145,6 +145,6 @@ public class LineDrawer : MonoBehaviour
 
     public void ClearLine()
     {
-        lr.positionCount = 0;
+        rectangleDrawer.positionCount = 0;
     }
 }

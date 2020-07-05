@@ -6,5 +6,5 @@ using UnityEngine;
 public class MapData
 {
     public List<TileEntry> tiles;
-
+    public string saveName;
 }

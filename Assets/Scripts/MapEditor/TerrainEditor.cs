@@ -29,6 +29,9 @@ public class TerrainEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EditorManager.Instance.InMenu)
+            return;
+
         currentMousePositionIndex = TileField.IndexOfPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), tileWidth, tileHeight);
 
         if (lastDrawnIndex != currentMousePositionIndex) 
@@ -117,5 +120,10 @@ public class TerrainEditor : MonoBehaviour
     public void SetCurrentTileType(TileTypes tileType) 
     {
         currentTileType = tileType;
+    }
+
+    public void ClearIndexDrawer() 
+    {
+        UIManager.Instance.lineDrawer.ClearLine();
     }
 }

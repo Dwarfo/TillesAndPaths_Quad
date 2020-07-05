@@ -8,19 +8,23 @@ public class GameSaveChooser : MonoBehaviour, ISaveAssigner
     public GameObject saveToChoosePrefab;
     public SaveGameEntry SaveEntry { get { return saveGameEntry; } }
 
-    private int numberOfItems = 0;
+    public int numberOfItems = 0;
     [SerializeField]
     private SaveGameEntry saveGameEntry;
+
+    public SaveGameEvent onSaveEntryChanged = new SaveGameEvent();
 
     public void ResetChosenSave() 
     {
         saveGameEntry = null;
         //make save look unchosen,
     }
+
     public void setSaveData(SaveGameEntry sge) 
     {
         saveGameEntry = sge;
         //make save look chosen, and make currently chosen entry not chosen
+        onSaveEntryChanged.Invoke(saveGameEntry.mapData);
     }
 
     public void AdjustContent() 

@@ -5,35 +5,48 @@ using UnityEngine.UI;
 
 public class EditorMenu : MonoBehaviour, IMenu
 {
+    [Header("MainMenuButtons")]
     public Button saveButton;
     public Button loadButton;
     public Button mainMenuButton;
     public Button continueButton;
     public Button exitButton;
 
+    [Header("Save/Load menus")]
+    public LoadMenu loadMenu;
+    public SaveMenu saveMenu;
+
     public Image panelCanvas;
 
-    private bool menuActive = false;
+    public BoolEvent menuToggled = new BoolEvent();
 
     void Start()
     {
         if (saveButton != null)
-            saveButton.onClick.AddListener(SaveOnClick);
+            saveButton.onClick.AddListener(OpenSaveMenu);
         if (loadButton != null)
             loadButton.onClick.AddListener(LoadOnClick);
         if (mainMenuButton != null)
-            mainMenuButton.onClick.AddListener(GotToMainMenu);
+            mainMenuButton.onClick.AddListener(GoToMainMenu);
         if (continueButton != null)
             continueButton.onClick.AddListener(Continue);
         if (exitButton != null)
             exitButton.onClick.AddListener(Quit);
 
+        saveMenu.backButton.onClick.AddListener(Back);
+        loadMenu.backButton.onClick.AddListener(Back);
     }
 
     void Update()
     {
+        if (loadMenu.gameObject.activeSelf || saveMenu.gameObject.activeSelf)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             ToggleElements();
+            menuToggled.Invoke(panelCanvas.gameObject.activeSelf);
+        }
     }
 
     public void ToggleElements() 
@@ -41,27 +54,35 @@ public class EditorMenu : MonoBehaviour, IMenu
         panelCanvas.gameObject.SetActive(!panelCanvas.gameObject.activeSelf);
     }
 
-    public void SaveOnClick()
+    public void OpenSaveMenu()
     {
-        EditorManager.Instance.SaveMap();
+        ToggleElements();
+        saveMenu.gameObject.SetActive(true);
     }
 
     public void LoadOnClick()
     {
-        EditorManager.Instance.LoadMap();
+        ToggleElements();
+        loadMenu.gameObject.SetActive(true);
     }
 
     public void Continue()
     {
         ToggleElements();
+        menuToggled.Invoke(panelCanvas.gameObject.activeSelf);
     }
 
     public void Quit()
     {
         Application.Quit();
     }
-    public void GotToMainMenu()
+    public void GoToMainMenu()
     {
+        menuToggled.Invoke(false);
+    }
 
+    private void Back() 
+    {
+        ToggleElements();
     }
 }
