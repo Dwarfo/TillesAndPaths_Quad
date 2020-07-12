@@ -7,13 +7,15 @@ public class SaveDialog : MonoBehaviour
 {
     public Button yesButton;
     public Button noButton;
+    public Text dialogMessage;//{!gamesave}
 
     void Start()
     {
-        noButton.onClick.AddListener(DisagreedOnNewSave);
+        noButton.onClick.AddListener(GoBack);
+        yesButton.onClick.AddListener(GoBack);
     }
 
-    private void DisagreedOnNewSave()
+    private void GoBack()
     {
         gameObject.SetActive(false);
     }

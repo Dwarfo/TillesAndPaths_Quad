@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EditorMenu : MonoBehaviour, IMenu
+public class EditorMenu : MonoBehaviour
 {
+
     [Header("MainMenuButtons")]
     public Button saveButton;
     public Button loadButton;
@@ -15,74 +18,124 @@ public class EditorMenu : MonoBehaviour, IMenu
     [Header("Save/Load menus")]
     public LoadMenu loadMenu;
     public SaveMenu saveMenu;
+    public Button agreeSaveButton;
+    public Button agreeLoadButton;
 
     public Image panelCanvas;
 
     public BoolEvent menuToggled = new BoolEvent();
 
+    private bool menuActive = false;
+
+    public SaveGameEvent loadSaveEvent = new SaveGameEvent();
+    public SaveGameEvent makeSaveEvent = new SaveGameEvent();
+
     void Start()
     {
         if (saveButton != null)
-            saveButton.onClick.AddListener(OpenSaveMenu);
+            saveButton.onClick.AddListener(GoToSaveMenu);
         if (loadButton != null)
-            loadButton.onClick.AddListener(LoadOnClick);
+            loadButton.onClick.AddListener(GoToLoadMenu);
         if (mainMenuButton != null)
             mainMenuButton.onClick.AddListener(GoToMainMenu);
         if (continueButton != null)
-            continueButton.onClick.AddListener(Continue);
+            continueButton.onClick.AddListener(ReturnToEditing);
         if (exitButton != null)
             exitButton.onClick.AddListener(Quit);
 
-        saveMenu.backButton.onClick.AddListener(Back);
-        loadMenu.backButton.onClick.AddListener(Back);
+        saveMenu.backButton.onClick.AddListener(GoToMenu);
+        saveMenu.SubscribeToEvent(makeSaveEvent);
+
+        saveMenu.newSaveDialog.yesButton.onClick.AddListener(AgreedOnNewSave);
+        saveMenu.duplicateDialog.yesButton.onClick.AddListener(AgreedToRewriteSave);
+
+        loadMenu.loadGameDialog.yesButton.onClick.AddListener(ReturnToEditing);
+        loadMenu.loadGameDialog.yesButton.onClick.AddListener(LoadSavegame);
+        
+        loadMenu.backButton.onClick.AddListener(GoToMenu);
+        
     }
 
     void Update()
     {
-        if (loadMenu.gameObject.activeSelf || saveMenu.gameObject.activeSelf)
-            return;
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ToggleElements();
-            menuToggled.Invoke(panelCanvas.gameObject.activeSelf);
+            if (loadMenu.isActiveAndEnabled || saveMenu.isActiveAndEnabled)
+            {
+                return;
+            }
+
+            if (menuActive)
+                ReturnToEditing();
+            else
+                GoToMenu();
+
+            menuToggled.Invoke(menuActive);
         }
     }
 
-    public void ToggleElements() 
+    private void ReturnToEditing()
     {
-        panelCanvas.gameObject.SetActive(!panelCanvas.gameObject.activeSelf);
+        panelCanvas.gameObject.SetActive(false);
+        menuToggled.Invoke(false);
+        menuActive = false;
     }
 
-    public void OpenSaveMenu()
+    private void GoToMenu()
     {
-        ToggleElements();
-        saveMenu.gameObject.SetActive(true);
+        panelCanvas.gameObject.SetActive(true);
+        menuToggled.Invoke(true);
+        menuActive = true;
     }
 
-    public void LoadOnClick()
+    private void GoToLoadMenu()
     {
-        ToggleElements();
+        panelCanvas.gameObject.SetActive(false);
         loadMenu.gameObject.SetActive(true);
+
+        EditorManager.Instance.FillGameSaves(loadMenu.saveChooser, 0);
     }
 
-    public void Continue()
+    private void GoToSaveMenu()
     {
-        ToggleElements();
-        menuToggled.Invoke(panelCanvas.gameObject.activeSelf);
+        panelCanvas.gameObject.SetActive(false);
+        saveMenu.gameObject.SetActive(true);
+
+        EditorManager.Instance.FillGameSaves(saveMenu.saveChooser, 1);
+    }
+    private void GoToMainMenu()
+    {
+        //mainmenu
     }
 
-    public void Quit()
+    private void Quit() 
     {
         Application.Quit();
     }
-    public void GoToMainMenu()
+
+    private void LoadSavegame() 
     {
-        menuToggled.Invoke(false);
+        if (loadMenu.saveChooser.SaveEntry != null)
+            loadSaveEvent.Invoke(loadMenu.saveChooser.SaveEntry.mapData);
     }
 
-    private void Back() 
+    private void AgreedOnNewSave()
     {
-        ToggleElements();
+        string saveName = saveMenu.newSaveInput.text;
+        MapData mapData = new MapData();
+        mapData.saveName = saveName;
+
+        makeSaveEvent.Invoke(mapData);
+
+        EditorManager.Instance.FillGameSaves(saveMenu.saveChooser, 1);
+    }
+
+    private void AgreedToRewriteSave()
+    {
+        MapData mapData = saveMenu.ChosenMeta;
+
+        makeSaveEvent.Invoke(mapData);
+
+        EditorManager.Instance.FillGameSaves(saveMenu.saveChooser, 1);
     }
 }

@@ -17,13 +17,11 @@ public class GameSaveChooser : MonoBehaviour, ISaveAssigner
     public void ResetChosenSave() 
     {
         saveGameEntry = null;
-        //make save look unchosen,
     }
 
     public void setSaveData(SaveGameEntry sge) 
     {
         saveGameEntry = sge;
-        //make save look chosen, and make currently chosen entry not chosen
         onSaveEntryChanged.Invoke(saveGameEntry.mapData);
     }
 
@@ -44,5 +42,14 @@ public class GameSaveChooser : MonoBehaviour, ISaveAssigner
         numberOfItems++;
 
         return saveEntryScript;
+    }
+
+    public void ClearEntries() 
+    {
+        SaveGameEntry[] entryList = content.GetComponentsInChildren<SaveGameEntry>();
+        foreach (SaveGameEntry saveEntry in entryList) 
+        {
+            Destroy(saveEntry.gameObject);
+        }
     }
 }

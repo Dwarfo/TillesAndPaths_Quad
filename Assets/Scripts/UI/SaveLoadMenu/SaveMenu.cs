@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class SaveMenu : MonoBehaviour
 {
-    public Button saveGameButton;
     public Button backButton;
 
     [Header("NewSaveElements")]
@@ -18,9 +17,9 @@ public class SaveMenu : MonoBehaviour
     [Space]
     public GameSaveChooser saveChooser;
 
+    public MapData ChosenMeta { get { return chosenMapData; } }
     private MapData chosenMapData;
-
-    public SaveGameEvent makeSaveEvent = new SaveGameEvent();
+    private SaveGameEvent saveEvent;
 
     void Start()
     {
@@ -28,9 +27,13 @@ public class SaveMenu : MonoBehaviour
 
         newSaveButton.onClick.AddListener(MakeNewSave);
         saveChooser.onSaveEntryChanged.AddListener(RewriteSaveGame);
-
-        duplicateDialog.yesButton.onClick.AddListener(AgreedToRewriteSave);
-        newSaveDialog.yesButton.onClick.AddListener(AgreedOnNewSave);
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            backButton.onClick.Invoke();
+        }
     }
 
     private void GoBack()
@@ -43,26 +46,20 @@ public class SaveMenu : MonoBehaviour
     {
         Debug.Log("New Save");
         newSaveDialog.gameObject.SetActive(true);
+        newSaveInput.text = null;
+        newSaveInput.ActivateInputField();
     }
 
     private void RewriteSaveGame(MapData mapData) 
     {
         duplicateDialog.gameObject.SetActive(true);
         this.chosenMapData = mapData;
-
-        //GameManager save with old name
+        duplicateDialog.dialogMessage.text = duplicateDialog.dialogMessage.text.Replace("{!gamesave}", chosenMapData.saveName);
     }
 
-    private void AgreedOnNewSave()
+    public void SubscribeToEvent(SaveGameEvent makeSaveEvent) 
     {
-        string saveName = newSaveInput.text;
-        
-        //GameManager save new
-    }
-
-    private void AgreedToRewriteSave()
-    {
-        makeSaveEvent.Invoke(saveChooser.SaveEntry.mapData);
+        this.saveEvent = makeSaveEvent;
     }
 
 }

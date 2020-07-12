@@ -2,17 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EditorEditingState : MonoBehaviour
+public class EditorEditingState : EditorAbstractState
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void EnterState(EditorFSM editorFsm) 
     {
-        
+
+    }
+    public override void MoveToEditorState(EditorFSM editorFsm)
+    {
+        Debug.Log("Already in editing");
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void MoveToLoadMenu(EditorFSM editorFsm)
     {
-        
+
+    }
+
+    public override void MoveToMainMenu(EditorFSM editorFsm)
+    {
+
+    }
+
+    public override void MoveToSaveMenu(EditorFSM editorFsm)
+    {
+
     }
 }

@@ -31,7 +31,7 @@ public class SaveGameEntry : MonoBehaviour
     public void SetSaveInfo(MapData md)
     {
         mapData = md;
-        saveDescr.text = "Tiles: " + md.tiles.Count;
+        saveDescr.text = md.saveName + "\n" + "Tiles: " + md.tiles.Count;
     }
 
     public void SetSaveChooser(GameSaveChooser seChooser)
