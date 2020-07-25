@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CameraControls.cs" />
     <Compile Include="Assets\Scripts\Character\InventoryController.cs" />
     <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
     <Compile Include="Assets\Scripts\FSM\AbstractState.cs" />
@@ -93,6 +94,10 @@
     <Compile Include="Assets\Scripts\Tiles\Tile.cs" />
     <Compile Include="Assets\Scripts\Tiles\TileField.cs" />
     <Compile Include="Assets\Scripts\UI\EditorMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\FSM\EditorMenuFSM\EditingState.cs" />
+    <Compile Include="Assets\Scripts\UI\FSM\EditorMenuFSM\HoverState.cs" />
+    <Compile Include="Assets\Scripts\UI\FSM\EditorMenuFSM\IMenuState.cs" />
+    <Compile Include="Assets\Scripts\UI\FSM\EditorMenuFSM\InMenuState.cs" />
     <Compile Include="Assets\Scripts\UI\IMenu.cs" />
     <Compile Include="Assets\Scripts\UI\LineDrawer.cs" />
     <Compile Include="Assets\Scripts\UI\SaveGameEntry.cs" />
@@ -104,6 +109,7 @@
     <Compile Include="Assets\Scripts\UI\TileChooser.cs" />
     <Compile Include="Assets\Scripts\UI\TileToChoose.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\Scripts\UI\UI_Util\SelectableUIScript.cs" />
     <Compile Include="Assets\Scripts\Util\ConstantValues.cs" />
     <Compile Include="Assets\Scripts\Util\Events.cs" />
     <Compile Include="Assets\Scripts\Util\Extensions.cs" />

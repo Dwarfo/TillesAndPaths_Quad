@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class EditorMenu : MonoBehaviour
 {
-
     [Header("MainMenuButtons")]
     public Button saveButton;
     public Button loadButton;

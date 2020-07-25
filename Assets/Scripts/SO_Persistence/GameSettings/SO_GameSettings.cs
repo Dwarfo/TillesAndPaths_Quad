@@ -5,10 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Setting", menuName = "Settings/CustomSettings", order = 1)]
 public class SO_GameSettings : ScriptableObject
 {
-    public float xSize;
-    public float ySize;
-    public float pixelOffset;
-    public float tileSize;
+    [Header("Map Parameters")]
+    public int xSize;
+    public int ySize;
     
     [Header("Available Tiles")]
     public SO_Tile[] allTileTypes;

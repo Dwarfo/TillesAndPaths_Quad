@@ -9,8 +9,19 @@ public class TileChooser : MonoBehaviour
     public GameObject tileToChoosePrefab;
 
     public TileInfoEvent tileChosenEvent = new TileInfoEvent();
+    public BoolEvent hoverOverTileChooser = new BoolEvent();
 
     private int numberOfItems = 0;
+    [SerializeField]
+    private SelectableUIScript uiScript;
+
+    private void Start()
+    {
+        uiScript.Initiate();
+        uiScript.onEnter.AddListener(FireOnEnter);
+        uiScript.onExit.AddListener(FireOnExit);
+    }
+
     public void InvokeTileChosen(SO_Tile tileInfo)
     {
         tileChosenEvent.Invoke(tileInfo);
@@ -31,5 +42,20 @@ public class TileChooser : MonoBehaviour
     {
         RectTransform contentTransform = content.GetComponent<RectTransform>();
         contentTransform.sizeDelta = new Vector2(contentTransform.sizeDelta.x, 45 + numberOfItems * 120);
+    }
+
+    private void FireOnEnter()
+    {
+        EditorManager.Instance.currentState.HoverOver(EditorManager.Instance);
+    }
+
+    private void FireOnExit()
+    {
+        EditorManager.Instance.currentState.ExitFromTileChooser(EditorManager.Instance);
+    }
+
+    public bool IsHovering() 
+    {
+        return uiScript.IsHovering();
     }
 }

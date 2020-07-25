@@ -329,8 +329,6 @@ public class HexaTileField : MonoBehaviour
 
     public void SetSettings(SO_GameSettings settings)
     {
-        this.tileSize = settings.tileSize;
-        this.pixelsOffset = settings.pixelOffset;
         this.tilePrefab = settings.tilePrefab;
 
         if (settings.allTileTypes.Length != 0)

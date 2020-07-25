@@ -28,7 +28,6 @@ public class TileField : MonoBehaviour
 
     public void SetSettings(SO_GameSettings settings)
     {
-        this.tileSize = settings.tileSize;
         this.tilePrefab = settings.tilePrefab;
 
         if (settings.allTileTypes.Length != 0)

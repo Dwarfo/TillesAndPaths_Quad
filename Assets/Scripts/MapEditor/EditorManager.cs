@@ -11,10 +11,16 @@ public class EditorManager : Singleton_MB<EditorManager>
     public GameSaveChooser saveChooserSaves;
     public GameSaveChooser saveChooserLoader;
     public SO_GameSettings gameSettings;
+    public CameraControls cameraControls;
     public bool InMenu { get { return inMenu; } }
 
     [Header("UI")]
     public EditorMenu editorMenu;
+
+    public IMenuState currentState;
+    public IMenuState editingState;
+    public IMenuState hoverState;
+    public IMenuState inMenuState;
 
     private bool inMenu;
 
@@ -31,8 +37,14 @@ public class EditorManager : Singleton_MB<EditorManager>
         editorMenu.loadSaveEvent.AddListener(LoadMap);
         editorMenu.makeSaveEvent.AddListener(SaveMap);
 
+        editingState = new EditingState();
+        hoverState = new HoverState();
+        inMenuState = new InMenuState();
+
+        currentState = editingState;
 
         FillTileChooser();
+        cameraControls.SetSize(gameSettings);
     }
 
     private void FillTileChooser() 
@@ -83,7 +95,8 @@ public class EditorManager : Singleton_MB<EditorManager>
             foreach(TileEntry entry in mapData.tiles) 
             {
                 Debug.Log("Tile: " + entry.xPosition + ":" + entry.yPosition + "  type: " + entry.tileType);
-                //generate tile
+                Vector2 position = new Vector2(entry.xPosition, entry.yPosition);
+                terrainEditor.PutTileInField(position, entry.tileType);
             }
             
             stream.Close();
@@ -117,8 +130,31 @@ public class EditorManager : Singleton_MB<EditorManager>
 
     private void ShutEditor(bool menuToggled) 
     {
-        Debug.Log("Invoked: " + menuToggled);
-        inMenu = menuToggled;
+        //Debug.Log("Invoked: " + menuToggled);
+        if (!menuToggled)
+            if (tileChooser.IsHovering())
+                currentState.MenuBlocked(this);
+            else
+                currentState.MenuExited(this);
+        else
+            currentState.MenuEnetered(this);
+
         UIManager.Instance.lineDrawer.ClearLine();
+    }
+
+    public void GoToHoveringState() 
+    {
+        currentState = hoverState;
+        UIManager.Instance.lineDrawer.ClearLine();
+    }
+
+    public void GoToInMenuState() 
+    {
+        currentState = inMenuState;
+    }
+
+    public void GoToEditingState() 
+    {
+        currentState = editingState;
     }
 }

@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetSettings(SO_GameSettings settings)
     {
-        this.pixelsOffset = settings.pixelOffset;
+        
     }
 }
 

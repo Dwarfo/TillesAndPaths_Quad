@@ -24,5 +24,6 @@ public enum TileTypes
     Empty = 0,
     Mountain = 1,
     Grass = 2,
-    RockGround = 3
+    RockGround = 3,
+    Wooden = 4
 }
