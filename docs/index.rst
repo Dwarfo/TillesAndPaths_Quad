@@ -10,7 +10,7 @@ Tiles and Paths documentation
       :maxdepth: 2
       :caption: Content
 
-      TerrainEditor.rst
+      FunctionalScripts/TerrainEditor.rst
 
 
 Indices and tables
