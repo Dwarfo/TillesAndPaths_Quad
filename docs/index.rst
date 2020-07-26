@@ -8,7 +8,7 @@ Tiles and Paths documentation
 
 .. toctree::
       :maxdepth: 2
-      :caption: Contents
+      :caption: contents.rst
 
       TerrainEditor.rst
 
