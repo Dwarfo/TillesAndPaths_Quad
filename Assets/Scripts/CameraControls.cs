@@ -68,7 +68,6 @@ public class CameraControls : MonoBehaviour
         Vector3 oldPos = gameObject.transform.position;
 
         newPos = new Vector3(Mathf.Clamp(oldPos.x + xInput * cameraMoveSpeed * Time.deltaTime, minXCoord, maxXCoord), Mathf.Clamp(oldPos.y + yInput * cameraMoveSpeed * Time.deltaTime, minYCoord, maxYCoord), -10);
-        Debug.Log("newPos: " + newPos);
         gameObject.transform.position = newPos;
     }
 }

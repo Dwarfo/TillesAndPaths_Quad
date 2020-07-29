@@ -49,7 +49,7 @@ public class EditorManager : Singleton_MB<EditorManager>
 
     private void FillTileChooser() 
     {
-        //Add event handler for tile newTIletype chosen, add all tiles to be available for choosing
+        //Add event handler for tile newTiletype chosen, add all tiles to be available for choosing
         tileChooser.tileChosenEvent.AddListener(HandleTileChosen);
 
         foreach (SO_Tile tileInfo in gameSettings.allTileTypes)

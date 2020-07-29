@@ -81,6 +81,10 @@
     <Compile Include="Assets\Scripts\Items\IPickable.cs" />
     <Compile Include="Assets\Scripts\Items\IUsable.cs" />
     <Compile Include="Assets\Scripts\Items\UsableItem.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\ActionsArgument.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\DeleteAction.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\IAction.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\PutTileAction.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorManager.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Saveload\MapData.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Saveload\TileEntry.cs" />

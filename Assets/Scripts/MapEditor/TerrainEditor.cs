@@ -16,14 +16,22 @@ public class TerrainEditor : MonoBehaviour
     private float tileHeight;
     private Dictionary<Vector2, Tile> indexToTileDict;
     private Dictionary<int, SO_Tile> intToTileTypes;
+    private Dictionary<string, IAction> nameToAction;
 
     public TileField tileField;
+
+    //actions functionality
+    private ActionsArgument actionsArgument;
+    private IAction currentAction;
 
     void Start()
     {
         lastDrawnIndex      = new Vector2Int(0, 0);
         indexToTileDict     = new Dictionary<Vector2, Tile>();
         duplicatesToDestroy = new List<Tile>();
+        nameToAction = new Dictionary<string, IAction>();
+        PutTileAction tileAction = new PutTileAction();
+        nameToAction.Add(tileAction.Name, tileAction);
     }
 
     // Update is called once per frame
@@ -41,7 +49,9 @@ public class TerrainEditor : MonoBehaviour
             UIManager.Instance.lineDrawer.DrawIsoRectangle(lastDrawnIndex, tileWidth, tileHeight);
             if (Input.GetMouseButton(0))
             {
-                PutTileInField(currentMousePositionIndex, (int)currentTileType);
+                //PutTileInField(currentMousePositionIndex, (int)currentTileType);
+                actionsArgument.indexArgument = currentMousePositionIndex;
+                currentAction.Execute(currentMousePositionIndex, actionsArgument);
                 Debug.Log("Tile coord:" + currentMousePositionIndex);
             }
 
@@ -49,7 +59,8 @@ public class TerrainEditor : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) 
         {
-            PutTileInField(currentMousePositionIndex, (int)currentTileType);
+            actionsArgument.indexArgument = currentMousePositionIndex;
+            currentAction.Execute(currentMousePositionIndex, actionsArgument);
             Debug.Log("Tile coord:" + currentMousePositionIndex);
         }
         if (Input.GetMouseButton(1)) 
@@ -120,7 +131,16 @@ public class TerrainEditor : MonoBehaviour
     public void SetCurrentTileType(TileTypes tileType) 
     {
         currentTileType = tileType;
-    }
+        CreateTileArgument tileArgument = new CreateTileArgument();
+        tileArgument.tileInfo = intToTileTypes[(int)tileType];
+        tileArgument.tileHeight = tileHeight;
+        tileArgument.tileWidth = tileWidth;
+        tileArgument.tilePrefab = tilePrefab;
+        tileArgument.parentTransform = transform;
+
+        currentAction = nameToAction["PutTile"];
+        actionsArgument = tileArgument;
+}
 
     public void ClearIndexDrawer() 
     {
