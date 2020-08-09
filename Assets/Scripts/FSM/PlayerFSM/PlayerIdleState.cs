@@ -20,8 +20,15 @@ public class PlayerIdleState : AbstractState
         {
             pc.ClearPath();
         }
-        /*if (pc.currentPath != null)
-            pc.TransitionToState(pc.moving);*/
+        if (pc.currentPath != null) 
+        {
+            pc.TransitionToState(pc.moving);
+        }
+        if (input == PlayerMovementFSM.Inputs.LeftMouseClick) 
+        {
+            pc.currentPath = GameManager.Instance.fieldScript.GetPath(TileField.IndexOfPosition(pc.playerTransform.position, EditorManager.Instance.gameSettings.tileWidth, EditorManager.Instance.gameSettings.tileHeight) , TileField.IndexOfPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), EditorManager.Instance.gameSettings.tileWidth, EditorManager.Instance.gameSettings.tileHeight));
+        }
+
     }
 
     public override void SetPath(PlayerMovementFSM pc, Vector2 startIndex, Vector2 endIndex)

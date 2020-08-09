@@ -83,7 +83,9 @@
     <Compile Include="Assets\Scripts\Items\UsableItem.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Actions\ActionsArgument.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Actions\DeleteAction.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\GenericAction.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Actions\IAction.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\Actions\InitArgument.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Actions\PutTileAction.cs" />
     <Compile Include="Assets\Scripts\MapEditor\EditorManager.cs" />
     <Compile Include="Assets\Scripts\MapEditor\Saveload\MapData.cs" />
@@ -94,7 +96,7 @@
     <Compile Include="Assets\Scripts\SO_Persistence\Items\SO_UsableItem.cs" />
     <Compile Include="Assets\Scripts\SO_Persistence\Player\StatsSO.cs" />
     <Compile Include="Assets\Scripts\SO_Persistence\Tiles\SO_Tile.cs" />
-    <Compile Include="Assets\Scripts\Tiles\HexaTileField.cs" />
+    <Compile Include="Assets\Scripts\SO_Persistence\Tiles\SO_TileFieldToGen.cs" />
     <Compile Include="Assets\Scripts\Tiles\Tile.cs" />
     <Compile Include="Assets\Scripts\Tiles\TileField.cs" />
     <Compile Include="Assets\Scripts\UI\EditorMenu.cs" />

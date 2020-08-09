@@ -11,6 +11,8 @@ public class TerrainEditor : MonoBehaviour
     private Vector2 lastDrawnIndex;
 
     [SerializeField]
+    private List<GenericAction> allActions;
+    [SerializeField]
     private TileTypes currentTileType;
     private float tileWidth;
     private float tileHeight;
@@ -30,8 +32,8 @@ public class TerrainEditor : MonoBehaviour
         indexToTileDict     = new Dictionary<Vector2, Tile>();
         duplicatesToDestroy = new List<Tile>();
         nameToAction = new Dictionary<string, IAction>();
-        PutTileAction tileAction = new PutTileAction();
-        nameToAction.Add(tileAction.Name, tileAction);
+
+        FillActionDict();
     }
 
     // Update is called once per frame
@@ -49,9 +51,9 @@ public class TerrainEditor : MonoBehaviour
             UIManager.Instance.lineDrawer.DrawIsoRectangle(lastDrawnIndex, tileWidth, tileHeight);
             if (Input.GetMouseButton(0))
             {
-                //PutTileInField(currentMousePositionIndex, (int)currentTileType);
-                actionsArgument.indexArgument = currentMousePositionIndex;
-                currentAction.Execute(currentMousePositionIndex, actionsArgument);
+
+                //actionsArgument.indexArgument = currentMousePositionIndex;
+                //currentAction.Execute(currentMousePositionIndex, actionsArgument);
                 Debug.Log("Tile coord:" + currentMousePositionIndex);
             }
 
@@ -59,14 +61,22 @@ public class TerrainEditor : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) 
         {
-            actionsArgument.indexArgument = currentMousePositionIndex;
-            currentAction.Execute(currentMousePositionIndex, actionsArgument);
+            //actionsArgument.indexArgument = currentMousePositionIndex;
+            //currentAction.Execute(currentMousePositionIndex, actionsArgument);
             Debug.Log("Tile coord:" + currentMousePositionIndex);
         }
         if (Input.GetMouseButton(1)) 
         {
             Debug.Log(currentMousePositionIndex);
             Debug.Log("Real mouse pos: " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        }
+    }
+
+    private void FillActionDict() 
+    {
+        foreach(GenericAction action in allActions)
+        {
+            nameToAction.Add(action.Name, action);
         }
     }
 
@@ -105,7 +115,7 @@ public class TerrainEditor : MonoBehaviour
             TileEntry entry = new TileEntry();
             entry.xPosition = tile.Value.Index.x;
             entry.yPosition = tile.Value.Index.y;
-            entry.tileType = (int)tile.Value.tile.tileType;
+            entry.tileType = (int)tile.Value.Type;
             entryList.Add(entry);
         }
 
@@ -133,10 +143,6 @@ public class TerrainEditor : MonoBehaviour
         currentTileType = tileType;
         CreateTileArgument tileArgument = new CreateTileArgument();
         tileArgument.tileInfo = intToTileTypes[(int)tileType];
-        tileArgument.tileHeight = tileHeight;
-        tileArgument.tileWidth = tileWidth;
-        tileArgument.tilePrefab = tilePrefab;
-        tileArgument.parentTransform = transform;
 
         currentAction = nameToAction["PutTile"];
         actionsArgument = tileArgument;

@@ -6,4 +6,5 @@ public interface IAction
 {
     string Name { get; }
     void Execute(Vector2 index, ActionsArgument argument);
+    void Init(InitArgument args);
 }

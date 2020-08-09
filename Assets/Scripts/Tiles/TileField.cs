@@ -12,12 +12,29 @@ public class TileField : MonoBehaviour
     private TileTypes[][] tipowoi;
     private Dictionary<int, SO_Tile> intToTileTypes;
     private Dictionary<Vector2, Tile> vectorsToTiles;
-
+    [SerializeField] SO_TileFieldToGen testTileField;
+ 
     void Start()
     {
         vectorsToTiles = new Dictionary<Vector2, Tile>();
+        GenerateEncounterMap(testTileField);
+        SetNeighbours();
+    }
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 vec = IndexOfPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), EditorManager.Instance.gameSettings.tileWidth, EditorManager.Instance.gameSettings.tileHeight);
+            foreach (Tile t in vectorsToTiles[vec].Neighbours) 
+            {
+                Debug.Log("Neighbour:" + t.Index);
+            }
+        }
     }
 
+    #region Indexing
+    //Indexing, tile choosing by index and mouse position
+    //---------------------------------------------------------------------------
     public static Vector2 IndexOfPosition(Vector3 mp, float w, float h)
     {
         int x = Mathf.FloorToInt(((mp.y) / (2 * h)) + ((mp.x) / (2 * w)));
@@ -26,6 +43,21 @@ public class TileField : MonoBehaviour
         return new Vector2(x, y);
     }
 
+    public Tile GetTileByIndex(Vector2 positionIndex)
+    {
+        if (vectorsToTiles.ContainsKey(positionIndex))
+        {
+            return vectorsToTiles[positionIndex];
+        }
+        else
+            return null;
+    }
+    //---------------------------------------------------------------------------
+    #endregion
+
+    #region Map_Generating
+    //Map generating
+    //---------------------------------------------------------------------------
     public void SetSettings(SO_GameSettings settings)
     {
         this.tilePrefab = settings.tilePrefab;
@@ -41,40 +73,11 @@ public class TileField : MonoBehaviour
         intToTileTypes = new Dictionary<int, SO_Tile>();
 
         AddTilesToDict(intToTileTypes, tiles); //Adding tiletypes to dictionary for generating map
-        DebugStructs(); // populating test tilemap tipowoi with int values of tiles
-        //DrawTiles(tipowoi); // drawing and instantiating tiles by tipowoi structure
-        //SetNeighbours(); // creating a graph structure by assigning neighbours
-        //GraphLine();
     }
-
-    public void DebugStructs()
+    public static void AddTilesToDict(Dictionary<int, SO_Tile> dict, SO_Tile[] tiles)
     {
-        tipowoi = new TileTypes[5][];
-        for (int i = 0; i < tipowoi.Length; i++)
-        {
-            tipowoi[i] = new TileTypes[5];
-        }
-
-        for (int i = 0; i < tipowoi.Length; i++)
-        {
-            for (int j = 0; j < tipowoi[i].Length; j++)
-            {
-                tipowoi[i][j] = (TileTypes)1;
-            }
-        }
-
-        for (int i = 0; i < tipowoi[1].Length; i++)
-        {
-            tipowoi[i][1] = (TileTypes)2;
-            tipowoi[i][4] = (TileTypes)2;
-        }
-        tipowoi[0][3] = (TileTypes)2;
-        tipowoi[3][3] = (TileTypes)2;
-        tipowoi[3][2] = (TileTypes)2;
-        tipowoi[4][3] = (TileTypes)2;
-        tipowoi[1][1] = (TileTypes)2;
-        tipowoi[2][1] = (TileTypes)2;
-        tipowoi[1][0] = (TileTypes)2;
+        foreach (var tile in tiles)
+            dict.Add((int)tile.tileType, tile);
     }
 
     public void DrawTilesFromMap(MapData mdata)
@@ -84,6 +87,62 @@ public class TileField : MonoBehaviour
             var newTile = MakeTileFromEntry(entry);
             vectorsToTiles.Add(newTile.Index, newTile);
         }
+    }
+
+    public void GenerateEncounterMap(SO_TileFieldToGen tileFieldToGen)
+    {
+        int totalWeight = 0;
+
+        foreach (TileToPercentage elem in tileFieldToGen.tileToPercentage)
+        {
+            totalWeight += elem.percentage;
+        }
+
+        int val;
+        SO_Tile tileType = null;
+        for (int i = 0; i < tileFieldToGen.sizeX; i++) 
+        {
+            for (int j = 0; j > -tileFieldToGen.sizeY; j--)
+            {
+                val = Random.Range(0, totalWeight);
+                for (int k = 0; k < tileFieldToGen.tileToPercentage.Length; k++)
+                {
+                    if (val < tileFieldToGen.tileToPercentage[k].percentage)
+                    {
+                        tileType = tileFieldToGen.tileToPercentage[k].tileType;
+                        break;
+                    }
+                    else
+                    {
+                        val -= tileFieldToGen.tileToPercentage[k].percentage;
+                    }
+                }
+
+                vectorsToTiles.Add(new Vector2(i, j), MakeTile(tilePrefab, tileType, new Vector2(i, j)));
+            }
+        }
+    }
+
+    public Tile MakeTile(GameObject tilePrefab, SO_Tile tileData, Vector2 position)
+    {
+        GameObject tile = Instantiate(tilePrefab);
+        tile.transform.SetParent(transform);
+        Tile tileScript = tile.GetComponent<Tile>();
+        tileScript.AssignTileData(tileData);
+        tileScript.SetIndex(position, 1.075f, 0.62f);
+        //tile.GetComponent<SpriteRenderer>().sortingOrder = -1 * (int)position.y;
+
+        return tileScript;
+    }
+
+    public void ClearMap()
+    {
+        foreach (KeyValuePair<Vector2, Tile> tile in vectorsToTiles)
+        {
+            Destroy(tile.Value.gameObject);
+        }
+
+        vectorsToTiles = new Dictionary<Vector2, Tile>();
     }
 
     private Tile MakeTileFromEntry(TileEntry entry) 
@@ -97,29 +156,6 @@ public class TileField : MonoBehaviour
         return tileScript;
     }
 
-
-    public Tile GetTileByIndex(Vector2Int positionIndex) 
-    {
-        if (vectorsToTiles.ContainsKey(positionIndex))
-        {
-            return vectorsToTiles[positionIndex];
-        }
-        else
-            return null;
-    }
-
-    public void ClearMap() 
-    {
-        foreach (KeyValuePair<Vector2, Tile> tile in vectorsToTiles)
-        {
-            Destroy(tile.Value.gameObject);
-        }
-
-        vectorsToTiles = new Dictionary<Vector2, Tile>();
-    }
-
-
-    //TODO Move generator functionality in different script
     public void SetNeighbours()
     {
         foreach (Tile t in vectorsToTiles.Values)
@@ -182,11 +218,21 @@ public class TileField : MonoBehaviour
             Debug.Log("Tile " + vectorsToTiles[tile].Index + " has neighbours: " + neighboursStr);
         }
     }
+    //---------------------------------------------------------------------------
+    #endregion
 
-    public static void AddTilesToDict(Dictionary<int, SO_Tile> dict, SO_Tile[] tiles)
+    #region Pathfinding
+    // Generating Path object
+    public Path GetPath(Vector2 start, Vector2 toGo)
     {
-        foreach (var tile in tiles)
-            dict.Add((int)tile.tileType, tile);
+        if (!vectorsToTiles.ContainsKey(toGo))
+            return null;
+        if (vectorsToTiles[toGo].IsImpassible)
+            return null;
+
+        CalculateHeuristics(vectorsToTiles[toGo]);
+        Debug.Log("Outside: " + vectorsToTiles[toGo].gameObject.name + "  Num of neighbours: " + vectorsToTiles[toGo].Neighbours.Count);
+        return CreatePath(vectorsToTiles[start], vectorsToTiles[toGo]);
     }
 
     private void CalculateHeuristics(Tile start)
@@ -196,20 +242,6 @@ public class TileField : MonoBehaviour
             vectorsToTiles[tile].CountHeuristics(start);
         }
     }
-
-    //TODO move navigation to different Script
-    public Path GetPath(Vector2Int start, Vector2Int toGo)
-    {
-        if (!vectorsToTiles.ContainsKey(toGo))
-            return null;
-        if (vectorsToTiles[toGo].tile.impassible)
-            return null;
-
-        CalculateHeuristics(vectorsToTiles[toGo]);
-        Debug.Log("Outside: " + vectorsToTiles[toGo].gameObject.name + "  Num of neighbours: " + vectorsToTiles[toGo].Neighbours.Count);
-        return CreatePath(vectorsToTiles[start], vectorsToTiles[toGo]);
-    }
-
 
     private Path CreatePath(Tile start, Tile end)
     {
@@ -241,7 +273,7 @@ public class TileField : MonoBehaviour
                         toCheck.Add(neighbour);
                         neighbour.SetParent(currentTile);
                     }
-                    else if(currentTile.G + neighbour.tile.terrainDifficulty < neighbour.G)
+                    else if(currentTile.G + neighbour.Difficulty < neighbour.G)
                     {
                         neighbour.SetParent(currentTile);
                     }
@@ -265,7 +297,7 @@ public class TileField : MonoBehaviour
         List<Tile> validNeighbours = new List<Tile>();
         foreach (Tile neighbour in tile.Neighbours)
         {
-            if (!neighbour.tile.impassible)
+            if (!neighbour.IsImpassible)
             {
                 validNeighbours.Add(neighbour);
             }
@@ -286,4 +318,6 @@ public class TileField : MonoBehaviour
 
         return tiles[0];
     }
+    //---------------------------------------------------------------------------
+    #endregion
 }

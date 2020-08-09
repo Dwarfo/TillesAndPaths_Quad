@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
         stateMachine.Tick();
         if (Input.GetMouseButtonDown(0))
         {
-            //stateMachine.SetPath(TileField.IndexOfPosition(transform.position, pixelsOffset), TileField.IndexOfPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), pixelsOffset));
             stateMachine.ProcessInput(PlayerMovementFSM.Inputs.LeftMouseClick);
 
             return;

@@ -15,9 +15,6 @@ public class GameManager : Singleton_MB<GameManager>
 
     void Start()
     {
-        fieldScript = fieldScript == null ? gameObject.AddComponent<TileField>() : fieldScript;
-        fieldScript.SetSettings(gameSettings);
-        fieldScript.Process();
 
     }
 
@@ -26,8 +23,6 @@ public class GameManager : Singleton_MB<GameManager>
         PathEvent pathChanged   = pc.getPathChangedEvent();
         PathEvent pathEnded     = pc.getPathEndedEvent();
 
-        pc.SetSettings(gameSettings);
-        ic.SubscribeToPathEnded(pathEnded);
         pathChanged.AddListener(HandleChangedPath);
     }
 

@@ -33,10 +33,10 @@ public class CameraControls : MonoBehaviour
     public void SetSize(SO_GameSettings gameSettings) 
     {
         cameraXSize = gameObject.GetComponent<Camera>().orthographicSize;
-        maxXCoord = gameSettings.xSize * gameSettings.tileWidth - cameraXSize;
-        minXCoord = -gameSettings.xSize * gameSettings.tileWidth + cameraXSize;
-        maxYCoord = gameSettings.ySize * gameSettings.tileHeight - cameraXSize;
-        minYCoord = -gameSettings.ySize * gameSettings.tileHeight + cameraXSize;
+        maxXCoord = gameSettings.xSize * gameSettings.tileWidth - cameraXSize + transform.position.x;
+        minXCoord = -gameSettings.xSize * gameSettings.tileWidth + cameraXSize + transform.position.x;
+        maxYCoord = gameSettings.ySize * gameSettings.tileHeight - cameraXSize + transform.position.y;
+        minYCoord = -gameSettings.ySize * gameSettings.tileHeight + cameraXSize + transform.position.y;
     }
 
     private void Move()

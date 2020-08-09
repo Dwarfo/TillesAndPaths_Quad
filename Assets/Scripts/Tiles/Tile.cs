@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public SO_Tile tile;
     public bool invalid = false;
+    public IPickable item;
+    public bool IsImpassible { get { return impassible; } }
+    public int Difficulty { get { return terrainDifficulty; } }
+    public TileTypes Type { get { return tileType; } }
 
     private Vector2 index;
     [SerializeField]
@@ -14,8 +17,12 @@ public class Tile : MonoBehaviour
     private int g = 0;
     private float f = 0;
     private Tile parent;
-    [SerializeField]
-    public IPickable item;
+
+    [Header("TileParams")]
+    [SerializeField] private int terrainDifficulty;
+    [SerializeField] private bool impassible;
+    [SerializeField] private TileTypes tileType;
+    [SerializeField] private Sprite tileImage;
 
     public float H { get { return heuristic; } }
     public int G { get { return g; } }
@@ -28,7 +35,11 @@ public class Tile : MonoBehaviour
 
     public void AssignTileData(SO_Tile tileSO)
     {
-        this.tile = tileSO;
+        this.tileImage = tileSO.tileImage;
+        this.tileType = tileSO.tileType;
+        this.impassible = tileSO.impassible;
+        this.terrainDifficulty = tileSO.terrainDifficulty;
+
         neighbours = new List<Tile>();
         transform.localScale = new Vector3(tileSO.xSizing, tileSO.ySizing, 1);
         GetComponent<SpriteRenderer>().sprite = tileSO.tileImage;
@@ -52,6 +63,7 @@ public class Tile : MonoBehaviour
 
         gameObject.transform.position = new Vector3(center.x, center.y, 0);
         gameObject.GetComponent<SpriteRenderer>().sortingOrder = -100 * (int)v.y - (int)v.x;
+        name = "Tile" + Index;
     }
 
     public void AddNeighbour(Tile neighbour)
@@ -70,7 +82,7 @@ public class Tile : MonoBehaviour
     }
     public void SetParent(Tile parent)
     {
-        this.g = parent.g + tile.terrainDifficulty;
+        this.g = parent.g + terrainDifficulty;
         this.f = g + heuristic;
         this.parent = parent;
     }
